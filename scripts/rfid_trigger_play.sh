@@ -80,7 +80,29 @@ if [ "$CARDID" ]; then
     # Special uses are for example volume changes, skipping, muting sound.
 
     case $CARDID in
-	    $CMDSHUFFLE)
+        $SWITCHBT)
+            # turns BT mode on
+            bluetoothctl connect 08:DF:1F:8A:29:45
+            sudo cp /home/pi/scripts/mopidy.BT.conf /etc/mopidy/mopidy.conf
+            $PATHDATA/playout_controls.sh -c=playerstop
+            sudo service mopidy restart #&&
+            sleep 10
+            NILS_LASTPLAYLIST=$(cat $PATHDATA/../settings/Latest_Playlist_Played)
+            NILS_LASTFOLDER=$(cat $PATHDATA/../settings/Latest_Folder_Played)
+            $PATHDATA/playout_controls.sh -c=playlistaddplay -v="${NILS_LASTPLAYLIST}" -d="${NILS_LASTFOLDER}"
+            ;;
+        $SWITCHSP)
+            # turns BT mode off
+            bluetoothctl disconnect 08:DF:1F:8A:29:45
+            sudo cp /home/pi/scripts/mopidy.default.conf /etc/mopidy/mopidy.conf
+            $PATHDATA/playout_controls.sh -c=playerstop
+            sudo service mopidy restart #&&
+            sleep 10
+            NILS_LASTPLAYLIST=$(cat $PATHDATA/../settings/Latest_Playlist_Played)
+            NILS_LASTFOLDER=$(cat $PATHDATA/../settings/Latest_Folder_Played)
+            $PATHDATA/playout_controls.sh -c=playlistaddplay -v="${NILS_LASTPLAYLIST}" -d="${NILS_LASTFOLDER}"
+            ;;
+	$CMDSHUFFLE)
             # toggles shuffle mode  (random on/off)
             $PATHDATA/playout_controls.sh -c=playershuffle
             ;;
