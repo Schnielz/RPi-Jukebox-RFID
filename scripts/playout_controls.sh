@@ -211,6 +211,7 @@ case $COMMAND in
         SHUFFLE_STATUS=$(echo -e status\\nclose | nc -w 1 localhost 6600 | grep -o -P '(?<=random: ).*')
         if [ "$SHUFFLE_STATUS" == 1 ] ; then  mpc random off; fi
         sleep 1
+        sudo cp /home/pi/scripts/mopidy.default.conf /etc/mopidy/mopidy.conf
         /usr/bin/mpg123 ${PATHDATA}/../shared/shutdownsound.mp3
         sleep 3
         ${POWEROFFCMD}
